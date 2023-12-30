@@ -10,6 +10,13 @@ const addPointBtn = document.querySelector("#addPoint") as HTMLButtonElement;
 const addSegmentBtn = document.querySelector(
   "#addSegment"
 ) as HTMLButtonElement;
+const removeSegmentBtn = document.querySelector(
+  "#removeSegment"
+) as HTMLButtonElement;
+const removePointBtn = document.querySelector(
+  "#removePoint"
+) as HTMLButtonElement;
+const removeAllBtn = document.querySelector("#removeAll") as HTMLButtonElement;
 
 canvas.width = config.WIDTH;
 canvas.height = config.HEIGHT;
@@ -35,6 +42,9 @@ graph.draw(context);
 
 addPointBtn.addEventListener("click", () => addRandomPoint(context));
 addSegmentBtn.addEventListener("click", () => addRandomSegment(context));
+removeSegmentBtn.addEventListener("click", () => removeRandomSegment(context));
+removePointBtn.addEventListener("click", () => removeRandomPoint(context));
+removeAllBtn.addEventListener("click", () => removeAll(context));
 
 function addRandomPoint(context: CanvasRenderingContext2D) {
   const success = graph.tryAddPoint(
@@ -55,4 +65,32 @@ function addRandomSegment(context: CanvasRenderingContext2D) {
   context.clearRect(0, 0, config.WIDTH, config.HEIGHT);
   graph.draw(context);
   console.log(success);
+}
+
+function removeRandomSegment(context: CanvasRenderingContext2D) {
+  if (graph.segments.length === 0) {
+    console.log("No segments to remove");
+  }
+
+  const index = Math.floor(Math.random() * graph.segments.length);
+  graph.removeSegment(graph.segments[index]);
+  context.clearRect(0, 0, config.WIDTH, config.HEIGHT);
+  graph.draw(context);
+}
+
+function removeRandomPoint(context: CanvasRenderingContext2D) {
+  if (graph.points.length === 0) {
+    console.log("No points to remove");
+  }
+
+  const index = Math.floor(Math.random() * graph.points.length);
+  graph.removePoint(graph.points[index]);
+  context.clearRect(0, 0, config.WIDTH, config.HEIGHT);
+  graph.draw(context);
+}
+
+function removeAll(context: CanvasRenderingContext2D) {
+  graph.dispose();
+  context.clearRect(0, 0, config.WIDTH, config.HEIGHT);
+  graph.draw(context);
 }
