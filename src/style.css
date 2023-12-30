@@ -39,3 +39,15 @@ h1 {
 canvas {
   background-color: #2a5;
 }
+
+button {
+  padding: .5rem;
+  margin-bottom: 1rem;
+  border-radius: .5rem;
+  background-color: #535bf2;
+  border: none;
+  &:hover {
+    cursor: pointer;
+    background-color: #646cff;
+  }
+}
