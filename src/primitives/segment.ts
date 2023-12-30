@@ -9,6 +9,14 @@ export class Segment {
     this.p2 = p2;
   }
 
+  equals(segment: Segment): boolean {
+    return this.includes(segment.p1) && this.includes(segment.p2);
+  }
+
+  includes(point: Point) {
+    return this.p1.equals(point) || this.p2.equals(point);
+  }
+
   draw(
     context: CanvasRenderingContext2D,
     width: number = 2,
