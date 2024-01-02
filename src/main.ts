@@ -4,6 +4,7 @@ import { Segment } from "./primitives/segment";
 import config from "./config/constants";
 import "./style.css";
 import { GraphEditor } from "./graph-editor";
+import { Utils } from "./math/utils";
 
 const canvas = document.querySelector("#myCanvas") as HTMLCanvasElement;
 
@@ -26,8 +27,9 @@ const s2 = new Segment(p1, p3);
 const s3 = new Segment(p1, p4);
 const s4 = new Segment(p2, p3);
 
+const utils = new Utils();
 const graph = new Graph([p1, p2, p3, p4], [s1, s2, s3, s4]);
-const graphEditor = new GraphEditor(canvas, graph);
+const graphEditor = new GraphEditor(canvas, graph, utils);
 
 animate();
 
