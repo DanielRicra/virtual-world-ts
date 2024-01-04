@@ -19,14 +19,19 @@ export class Segment {
 
   draw(
     context: CanvasRenderingContext2D,
-    width: number = 2,
-    color: string = "black"
+    {
+      width = 2,
+      color = "black",
+      dash = [],
+    }: { width?: number; color?: string; dash?: number[] } = {}
   ) {
     context.beginPath();
     context.lineWidth = width;
     context.strokeStyle = color;
+    context.setLineDash(dash);
     context.moveTo(this.p1.x, this.p1.y);
     context.lineTo(this.p2.x, this.p2.y);
     context.stroke();
+    context.setLineDash([]);
   }
 }
