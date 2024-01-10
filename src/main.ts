@@ -5,6 +5,7 @@ import config from "./config/constants";
 import "./style.css";
 import { GraphEditor } from "./graph-editor";
 import { Utils } from "./math/utils";
+import { Viewport } from "./viewport";
 
 const canvas = document.querySelector("#myCanvas") as HTMLCanvasElement;
 
@@ -29,12 +30,14 @@ const s4 = new Segment(p2, p3);
 
 const utils = new Utils();
 const graph = new Graph([p1, p2, p3, p4], [s1, s2, s3, s4]);
-const graphEditor = new GraphEditor(canvas, graph, utils);
+const viewport = new Viewport(canvas, utils);
+const graphEditor = new GraphEditor(viewport, graph, utils);
 
 animate();
 
 function animate() {
-  context?.clearRect(0, 0, config.WIDTH, config.HEIGHT);
+  viewport.reset();
+
   graphEditor.display();
   requestAnimationFrame(animate);
 }
