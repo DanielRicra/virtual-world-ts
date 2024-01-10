@@ -1,6 +1,7 @@
 import type { Graph } from "./math/graph";
 import type { Utils } from "./math/utils";
 import { Point, Segment } from "./primitives";
+import { Viewport } from "./viewport";
 
 enum ClickNumbers {
   LEFT = 0,
@@ -15,13 +16,11 @@ export class GraphEditor {
   hoveredPoint: Point | null;
   isDragging: boolean;
   mousePoint: Point | null;
+  viewport: Viewport;
 
-  constructor(
-    canvas: HTMLCanvasElement,
-    graph: Graph,
-    private readonly utils: Utils
-  ) {
-    this.canvas = canvas;
+  constructor(viewport: Viewport, graph: Graph, private readonly utils: Utils) {
+    this.viewport = viewport;
+    this.canvas = viewport.canvas;
     this.graph = graph;
     this.selectedPoint = null;
     this.hoveredPoint = null;
@@ -29,7 +28,7 @@ export class GraphEditor {
     this.isDragging = false;
     this.mousePoint = null;
 
-    this.context = canvas.getContext("2d") as CanvasRenderingContext2D;
+    this.context = this.canvas.getContext("2d") as CanvasRenderingContext2D;
 
     this.addEventListeners();
   }
@@ -72,11 +71,11 @@ export class GraphEditor {
   }
 
   private handleMouseMove(event: MouseEvent) {
-    this.mousePoint = new Point(event.offsetX, event.offsetY);
+    this.mousePoint = this.viewport.getMouse(event, true);
     this.hoveredPoint = this.utils.getNearestPoint(
       this.mousePoint,
       this.graph.points,
-      10
+      10 * this.viewport.zoom
     );
     if (this.isDragging && this.selectedPoint) {
       this.selectedPoint.x = this.mousePoint.x;
