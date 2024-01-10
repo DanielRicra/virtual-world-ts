@@ -1,4 +1,4 @@
-import type { Point } from "../primitives/point";
+import { Point } from "../primitives/point";
 
 export class Utils {
   distance(p1: Point, p2: Point) {
@@ -22,5 +22,17 @@ export class Utils {
     }
 
     return nearestPoint;
+  }
+
+  add(p1: Point, p2: Point) {
+    return new Point(p1.x + p2.x, p1.y + p2.y);
+  }
+
+  subtract(p1: Point, p2: Point) {
+    return new Point(p1.x - p2.x, p1.y - p2.y);
+  }
+
+  scale(p: Point, scaler: number) {
+    return new Point(p.x * scaler, p.y * scaler);
   }
 }
