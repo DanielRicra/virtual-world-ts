@@ -1,9 +1,22 @@
-import type { Point } from "../primitives/point";
-import type { Segment } from "../primitives/segment";
+import { Point, Segment } from "../primitives";
 
 export class Graph {
   points: Point[];
   segments: Segment[];
+
+  static load(info: { points: Point[]; segments: Segment[] }): Graph {
+    const points = info.points.map((p) => new Point(p.x, p.y));
+    return new Graph(
+      points,
+      info.segments.map(
+        (s) =>
+          new Segment(
+            points.find((p) => p.equals(s.p1)) ?? new Point(0, 0),
+            points.find((p) => p.equals(s.p2)) ?? new Point(0, 0)
+          )
+      )
+    );
+  }
 
   constructor(points: Point[] = [], segments: Segment[] = []) {
     this.points = points;
