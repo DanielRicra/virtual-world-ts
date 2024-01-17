@@ -4,6 +4,7 @@ import "./style.css";
 import { GraphEditor } from "./graph-editor";
 import { Utils } from "./math/utils";
 import { Viewport } from "./viewport";
+import { Envelope } from "./primitives";
 
 const canvas = document.querySelector("#myCanvas") as HTMLCanvasElement;
 
@@ -34,8 +35,8 @@ animate();
 
 function animate() {
   viewport.reset();
-
   graphEditor.display();
+  new Envelope(graph.segments[0], 80, 10, utils).draw(context!);
   requestAnimationFrame(animate);
 }
 
