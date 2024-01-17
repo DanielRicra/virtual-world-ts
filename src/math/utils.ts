@@ -35,4 +35,15 @@ export class Utils {
   scale(p: Point, scaler: number) {
     return new Point(p.x * scaler, p.y * scaler);
   }
+
+  translate(location: Point, angle: number, offset: number) {
+    return new Point(
+      location.x + Math.cos(angle) * offset,
+      location.y + Math.sin(angle) * offset
+    );
+  }
+
+  angle(p: Point) {
+    return Math.atan2(p.y, p.x);
+  }
 }
