@@ -32,10 +32,13 @@ export class Envelope {
       points.push(this.utils.translate(p2, Math.PI + i, radius));
     }
 
-    return new Polygon(points);
+    return new Polygon(points, this.utils);
   }
 
-  draw(context: CanvasRenderingContext2D) {
-    this.polygon.draw(context);
+  draw(
+    context: CanvasRenderingContext2D,
+    options: { stroke?: string; lineWidth?: number; fill?: string }
+  ) {
+    this.polygon.draw(context, options);
   }
 }
