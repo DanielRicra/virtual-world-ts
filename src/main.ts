@@ -4,7 +4,7 @@ import "./style.css";
 import { GraphEditor } from "./graph-editor";
 import { Utils } from "./math/utils";
 import { Viewport } from "./viewport";
-import { Envelope } from "./primitives";
+import { World } from "./world";
 
 const canvas = document.querySelector("#myCanvas") as HTMLCanvasElement;
 
@@ -28,6 +28,8 @@ const graphInfo = graphString ? JSON.parse(graphString) : null;
 
 const utils = new Utils();
 const graph = graphInfo ? Graph.load(graphInfo) : new Graph();
+const world = new World(graph, utils, 50, 10);
+
 const viewport = new Viewport(canvas, utils);
 const graphEditor = new GraphEditor(viewport, graph, utils);
 
@@ -35,8 +37,10 @@ animate();
 
 function animate() {
   viewport.reset();
+  world.generate();
+  world.draw(context!);
+  if (context) context.globalAlpha = 0.3;
   graphEditor.display();
-  new Envelope(graph.segments[0], 80, 10, utils).draw(context!);
   requestAnimationFrame(animate);
 }
 
