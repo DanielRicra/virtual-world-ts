@@ -40,6 +40,14 @@ export class Utils {
     return new Point(p.x * scaler, p.y * scaler);
   }
 
+  normalize(p: Point) {
+    return this.scale(p, 1 / this.magnitude(p));
+  }
+
+  magnitude(p: Point) {
+    return Math.hypot(p.x, p.y);
+  }
+
   translate(location: Point, angle: number, offset: number) {
     return new Point(
       location.x + Math.cos(angle) * offset,
@@ -56,7 +64,8 @@ export class Utils {
     const uTop = (C.y - A.y) * (A.x - B.x) - (C.x - A.x) * (A.y - B.y);
     const bottom = (D.y - C.y) * (B.x - A.x) - (D.x - C.x) * (B.y - A.y);
 
-    if (bottom != 0) {
+    const epsilon = 0.001;
+    if (Math.abs(bottom) > epsilon) {
       const t = tTop / bottom;
       const u = uTop / bottom;
       if (t >= 0 && t <= 1 && u >= 0 && u <= 1) {
