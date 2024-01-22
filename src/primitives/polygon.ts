@@ -29,6 +29,17 @@ export class Polygon {
     return keptSegments;
   }
 
+  intersectsPolygon(polygon: Polygon) {
+    for (let s1 of this.segments) {
+      for (let s2 of polygon.segments) {
+        if (this.utils.getIntersection(s1.p1, s1.p2, s2.p1, s2.p2)) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
   containsSegment(seg: Segment): boolean {
     const midPoint = this.utils.average(seg.p1, seg.p2);
     return this.containsPoint(midPoint);
@@ -74,10 +85,10 @@ export class Polygon {
           const point = new Point(int.x, int.y);
           let aux = segments1[i].p2;
           segments1[i].p2 = point;
-          segments1.splice(i + 1, 0, new Segment(point, aux));
+          segments1.splice(i + 1, 0, new Segment(point, aux, utils));
           aux = segments2[j].p2;
           segments2[j].p2 = point;
-          segments2.splice(j + 1, 0, new Segment(point, aux));
+          segments2.splice(j + 1, 0, new Segment(point, aux, utils));
         }
       }
     }
@@ -87,7 +98,9 @@ export class Polygon {
     this.segments = [];
 
     for (let i = 1; i <= points.length; i++) {
-      this.segments.push(new Segment(points[i - 1], points[i % points.length]));
+      this.segments.push(
+        new Segment(points[i - 1], points[i % points.length], utils)
+      );
     }
   }
 
