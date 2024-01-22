@@ -1,12 +1,21 @@
+import { Utils } from "../math/utils";
 import type { Point } from "./point";
 
 export class Segment {
   p1: Point;
   p2: Point;
 
-  constructor(p1: Point, p2: Point) {
+  constructor(p1: Point, p2: Point, private readonly utils: Utils) {
     this.p1 = p1;
     this.p2 = p2;
+  }
+
+  length() {
+    return this.utils.distance(this.p1, this.p2);
+  }
+
+  directionVector() {
+    return this.utils.normalize(this.utils.subtract(this.p2, this.p1));
   }
 
   equals(segment: Segment): boolean {
