@@ -5,15 +5,20 @@ import { Envelope, Polygon, Segment } from "./primitives";
 export class World {
   envelopes: Envelope[];
   roadBorders: Segment[];
+  buildings: Polygon[];
 
   constructor(
     private readonly graph: Graph,
     private readonly utils: Utils,
     public roadWidth = 100,
-    public roadRoundness = 3
+    public roadRoundness = 3,
+    private buildingWidth = 150,
+    private buildingMinLength = 150,
+    private spacing = 50
   ) {
     this.envelopes = [];
     this.roadBorders = [];
+    this.buildings = [];
 
     this.generate();
   }
@@ -30,6 +35,72 @@ export class World {
       this.envelopes.map((e) => e.polygon),
       this.utils
     );
+    this.buildings = this.generateBuildings();
+  }
+
+  generateBuildings(): Polygon[] {
+    const tempEnvelopes = [];
+    for (const seg of this.graph.segments) {
+      tempEnvelopes.push(
+        new Envelope(
+          seg,
+          this.roadWidth + this.buildingWidth + this.spacing * 2,
+          this.roadRoundness,
+          this.utils
+        )
+      );
+    }
+
+    const guides = Polygon.union(
+      tempEnvelopes.map((e) => e.polygon),
+      this.utils
+    );
+
+    for (let i = 0; i < guides.length; i++) {
+      const seg = guides[i];
+      if (seg.length() < this.buildingMinLength) {
+        guides.splice(i, 1);
+        i--;
+      }
+    }
+
+    const supports = [];
+    for (let seg of guides) {
+      const len = seg.length() + this.spacing;
+      const buildingCount = Math.floor(
+        len / (this.buildingMinLength + this.spacing)
+      );
+      const buildingLength = len / buildingCount - this.spacing;
+      const dir = seg.directionVector();
+
+      let q1 = seg.p1;
+      let q2 = this.utils.add(q1, this.utils.scale(dir, buildingLength));
+      supports.push(new Segment(q1, q2, this.utils));
+
+      for (let i = 2; i <= buildingCount; i++) {
+        q1 = this.utils.add(q2, this.utils.scale(dir, this.spacing));
+        q2 = this.utils.add(q1, this.utils.scale(dir, buildingLength));
+        supports.push(new Segment(q1, q2, this.utils));
+      }
+    }
+
+    const bases = [];
+    for (const seg of supports) {
+      bases.push(
+        new Envelope(seg, this.buildingWidth, undefined, this.utils).polygon
+      );
+    }
+
+    for (let i = 0; i < bases.length - 1; i++) {
+      for (let j = i + 1; j < bases.length; j++) {
+        if (bases[i].intersectsPolygon(bases[j])) {
+          bases.splice(j, 1);
+          j--;
+        }
+      }
+    }
+
+    return bases;
   }
 
   draw(context: CanvasRenderingContext2D) {
@@ -43,6 +114,10 @@ export class World {
 
     for (const seg of this.roadBorders) {
       seg.draw(context, { color: "white", width: 4 });
+    }
+
+    for (const bld of this.buildings) {
+      bld.draw(context);
     }
   }
 }
