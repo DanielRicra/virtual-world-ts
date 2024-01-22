@@ -37,7 +37,7 @@ export class Envelope {
 
   draw(
     context: CanvasRenderingContext2D,
-    options: { stroke?: string; lineWidth?: number; fill?: string }
+    options: { stroke?: string; lineWidth?: number; fill?: string } = {}
   ) {
     this.polygon.draw(context, options);
   }
