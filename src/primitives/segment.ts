@@ -26,6 +26,29 @@ export class Segment {
     return this.p1.equals(point) || this.p2.equals(point);
   }
 
+  distanceToPoint(point: Point) {
+    const distance = this.utils.distance;
+    const proj = this.projectPoint(point);
+    if (proj.offset > 0 && proj.offset < 1) {
+      return distance(point, proj.point);
+    }
+    const distToP1 = distance(point, this.p1);
+    const distToP2 = distance(point, this.p2);
+    return Math.min(distToP1, distToP2);
+  }
+
+  projectPoint(point: Point) {
+    const a = this.utils.subtract(point, this.p1);
+    const b = this.utils.subtract(this.p2, this.p1);
+    const normB = this.utils.normalize(b);
+    const scaler = this.utils.dot(a, normB);
+    const proj = {
+      point: this.utils.add(this.p1, this.utils.scale(normB, scaler)),
+      offset: scaler / this.utils.magnitude(b),
+    };
+    return proj;
+  }
+
   draw(
     context: CanvasRenderingContext2D,
     {

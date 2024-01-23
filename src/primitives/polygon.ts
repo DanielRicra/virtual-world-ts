@@ -29,6 +29,14 @@ export class Polygon {
     return keptSegments;
   }
 
+  distanceToPoint(point: Point) {
+    return Math.min(...this.segments.map((s) => s.distanceToPoint(point)));
+  }
+
+  distanceToPolygon(polygon: Polygon) {
+    return Math.min(...this.points.map((p) => polygon.distanceToPoint(p)));
+  }
+
   intersectsPolygon(polygon: Polygon) {
     for (let s1 of this.segments) {
       for (let s2 of polygon.segments) {

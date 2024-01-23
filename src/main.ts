@@ -27,17 +27,21 @@ const graphString = localStorage.getItem("graph");
 const graphInfo = graphString ? JSON.parse(graphString) : null;
 
 const utils = new Utils();
-const graph = graphInfo ? Graph.load(graphInfo) : new Graph();
+const graph = graphInfo ? Graph.load(graphInfo, utils) : new Graph();
 const world = new World(graph, utils, 50, 10);
 
 const viewport = new Viewport(canvas, utils);
 const graphEditor = new GraphEditor(viewport, graph, utils);
 
+let oldGraphHad = graph.hash();
 animate();
 
 function animate() {
   viewport.reset();
-  world.generate();
+  if (graph.hash() != oldGraphHad) {
+    world.generate();
+    oldGraphHad = graph.hash();
+  }
   world.draw(context!);
   if (context) context.globalAlpha = 0.3;
   graphEditor.display();
