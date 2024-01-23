@@ -1,10 +1,14 @@
 import { Point, Segment } from "../primitives";
+import { Utils } from "./utils";
 
 export class Graph {
   points: Point[];
   segments: Segment[];
 
-  static load(info: { points: Point[]; segments: Segment[] }): Graph {
+  static load(
+    info: { points: Point[]; segments: Segment[] },
+    utils: Utils
+  ): Graph {
     const points = info.points.map((p) => new Point(p.x, p.y));
     return new Graph(
       points,
@@ -12,7 +16,8 @@ export class Graph {
         (s) =>
           new Segment(
             points.find((p) => p.equals(s.p1)) ?? new Point(0, 0),
-            points.find((p) => p.equals(s.p2)) ?? new Point(0, 0)
+            points.find((p) => p.equals(s.p2)) ?? new Point(0, 0),
+            utils
           )
       )
     );
@@ -21,6 +26,10 @@ export class Graph {
   constructor(points: Point[] = [], segments: Segment[] = []) {
     this.points = points;
     this.segments = segments;
+  }
+
+  hash() {
+    return JSON.stringify(this);
   }
 
   addPoint(point: Point): void {
