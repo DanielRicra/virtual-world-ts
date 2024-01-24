@@ -87,4 +87,8 @@ export class Utils {
   dot(p1: Point, p2: Point) {
     return p1.x * p2.x + p1.y * p2.y;
   }
+
+  lerp2D(A: Point, B: Point, t: number): Point {
+    return new Point(this.lerp(A.x, B.x, t), this.lerp(A.y, B.y, t));
+  }
 }

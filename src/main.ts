@@ -42,7 +42,8 @@ function animate() {
     world.generate();
     oldGraphHad = graph.hash();
   }
-  world.draw(context!);
+  const viewPoint = utils.scale(viewport.getOffset(), -1);
+  world.draw(context!, viewPoint);
   if (context) context.globalAlpha = 0.3;
   graphEditor.display();
   requestAnimationFrame(animate);
