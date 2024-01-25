@@ -45,9 +45,26 @@ button {
   margin-bottom: 1rem;
   border-radius: .5rem;
   background-color: #535bf2;
-  border: none;
+  border: 1px solid rgba(255,255,255,.5);
+  font-weight: bold;
+  transition: all 250ms ease-in;
   &:hover {
     cursor: pointer;
-    background-color: #646cff;
+    background-color: #4c53da;
   }
+}
+.toggleButtons {
+  display: flex;
+  & .setMode {
+    border-radius: .6rem 0 0 .6rem;
+  }
+  & .stop {
+    border-radius: 0 .6rem .6rem 0;
+  }
+}
+.controls {
+  display: flex;
+  justify-content: center;
+  gap: .5rem;
+  margin-top: .5rem;
 }

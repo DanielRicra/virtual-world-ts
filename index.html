@@ -9,9 +9,14 @@
   <body>
     <h1>World editor</h1>
     <canvas id="myCanvas"></canvas>
-    <div id="controls">
-      <button type="button" id="deleteBtn">🗑</button>
-      <button type="button" id="saveBtn">💾</button>
+    <div id="controls" class="controls">
+      <button type="button" id="deleteBtn">Delete</button>
+      <button type="button" id="saveBtn">Save</button>
+      &nbsp;
+      <div class="toggleButtons">
+        <button type="button" id="setModeBtn" class="setMode">Set Mode</button>
+        <button type="button" id="stopBtn" class="stop">Stop🛑</button>
+      </div>
     </div>
     <script type="module" src="/src/main.ts"></script>
   </body>
