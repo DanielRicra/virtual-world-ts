@@ -29,23 +29,33 @@ export class GraphEditor {
     this.mousePoint = null;
 
     this.context = this.canvas.getContext("2d") as CanvasRenderingContext2D;
+  }
 
+  enable() {
     this.addEventListeners();
   }
 
-  private addEventListeners() {
-    this.canvas.addEventListener("mousedown", this.handleMouseDown.bind(this));
-
-    this.canvas.addEventListener("mousemove", this.handleMouseMove.bind(this));
-
-    this.canvas.addEventListener("contextmenu", (event) =>
-      event.preventDefault()
-    );
-
-    this.canvas.addEventListener("mouseup", () => (this.isDragging = false));
+  disable() {
+    this.removeEventListeners();
+    this.selectedPoint = null;
+    this.hoveredPoint = null;
   }
 
-  private handleMouseDown(event: MouseEvent) {
+  private addEventListeners() {
+    this.canvas.addEventListener("mousedown", this.handleMouseDown);
+    this.canvas.addEventListener("mousemove", this.handleMouseMove);
+    this.canvas.addEventListener("contextmenu", this.handleContextMenu);
+    this.canvas.addEventListener("mouseup", this.handleMouseUp);
+  }
+
+  private removeEventListeners() {
+    this.canvas.removeEventListener("mousedown", this.handleMouseDown);
+    this.canvas.removeEventListener("mousemove", this.handleMouseMove);
+    this.canvas.removeEventListener("contextmenu", this.handleContextMenu);
+    this.canvas.removeEventListener("mouseup", this.handleMouseUp);
+  }
+
+  private handleMouseDown = (event: MouseEvent) => {
     if (event.button === ClickNumbers.RIGHT) {
       if (this.selectedPoint) {
         this.selectedPoint = null;
@@ -68,9 +78,9 @@ export class GraphEditor {
 
       this.hoveredPoint = this.mousePoint;
     }
-  }
+  };
 
-  private handleMouseMove(event: MouseEvent) {
+  private handleMouseMove = (event: MouseEvent) => {
     this.mousePoint = this.viewport.getMouse(event, true);
     this.hoveredPoint = this.utils.getNearestPoint(
       this.mousePoint,
@@ -81,11 +91,21 @@ export class GraphEditor {
       this.selectedPoint.x = this.mousePoint.x;
       this.selectedPoint.y = this.mousePoint.y;
     }
-  }
+  };
+
+  private handleContextMenu = (event: MouseEvent) => {
+    event.preventDefault();
+  };
+
+  private handleMouseUp = () => {
+    this.isDragging = false;
+  };
 
   private select(point: Point) {
     if (this.selectedPoint) {
-      this.graph.tryAddSegment(new Segment(this.selectedPoint, point));
+      this.graph.tryAddSegment(
+        new Segment(this.selectedPoint, point, this.utils)
+      );
     }
     this.selectedPoint = point;
   }
@@ -113,7 +133,7 @@ export class GraphEditor {
     if (this.selectedPoint) {
       if (this.mousePoint) {
         const intent = this.hoveredPoint ? this.hoveredPoint : this.mousePoint;
-        new Segment(this.selectedPoint, intent).draw(this.context, {
+        new Segment(this.selectedPoint, intent, this.utils).draw(this.context, {
           dash: [3, 3],
         });
       }
