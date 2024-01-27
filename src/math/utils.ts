@@ -1,3 +1,4 @@
+import { Segment } from "../primitives";
 import { Point } from "../primitives/point";
 
 export class Utils {
@@ -26,6 +27,25 @@ export class Utils {
     }
 
     return nearestPoint;
+  }
+
+  getNearestSegment(
+    location: Point,
+    segments: Segment[],
+    threshold: number = Number.MAX_SAFE_INTEGER
+  ): Segment | null {
+    let minDistance = Number.MAX_SAFE_INTEGER;
+    let nearestSegment = null;
+
+    for (const seg of segments) {
+      const distance = seg.distanceToPoint(location);
+      if (distance < minDistance && distance < threshold) {
+        minDistance = distance;
+        nearestSegment = seg;
+      }
+    }
+
+    return nearestSegment;
   }
 
   add(p1: Point, p2: Point) {
