@@ -1,7 +1,7 @@
-import type { Graph } from "./math/graph";
-import type { Utils } from "./math/utils";
-import { Point, Segment } from "./primitives";
-import { Viewport } from "./viewport";
+import type { Graph } from "../math/graph";
+import type { Utils } from "../math/utils";
+import { Point, Segment } from "../primitives";
+import { Viewport } from "../viewport";
 
 enum ClickNumbers {
   LEFT = 0,
