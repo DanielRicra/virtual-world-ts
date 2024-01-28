@@ -68,6 +68,10 @@ export class Utils {
     return Math.hypot(p.x, p.y);
   }
 
+  perpendicular(p: Point) {
+    return new Point(-p.y, p.x);
+  }
+
   translate(location: Point, angle: number, offset: number) {
     return new Point(
       location.x + Math.cos(angle) * offset,
