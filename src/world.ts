@@ -1,4 +1,6 @@
 import { Building, Tree } from "./items";
+import { Stop } from "./markings";
+import { Crossing } from "./markings/crossing";
 import { Graph, Utils } from "./math";
 import { Envelope, Point, Polygon, Segment } from "./primitives";
 
@@ -7,9 +9,11 @@ export class World {
   roadBorders: Segment[];
   buildings: Building[];
   trees: Tree[];
+  laneGuides: Segment[];
+  markings: (Stop | Crossing)[];
 
   constructor(
-    private readonly graph: Graph,
+    public graph: Graph,
     private readonly utils: Utils,
     public roadWidth = 100,
     public roadRoundness = 3,
@@ -22,6 +26,9 @@ export class World {
     this.roadBorders = [];
     this.buildings = [];
     this.trees = [];
+    this.laneGuides = [];
+
+    this.markings = [];
 
     this.generate();
   }
@@ -40,6 +47,23 @@ export class World {
     );
     this.buildings = this.generateBuildings();
     this.trees = this.generateTrees();
+
+    this.laneGuides.length = 0;
+    this.laneGuides.push(...this.generateLaneGuides());
+  }
+
+  private generateLaneGuides() {
+    const tempEnvelopes = [];
+    for (const seg of this.graph.segments) {
+      tempEnvelopes.push(
+        new Envelope(seg, this.roadWidth / 2, this.roadRoundness, this.utils)
+      );
+    }
+    const segments = Polygon.union(
+      tempEnvelopes.map((e) => e.polygon),
+      this.utils
+    );
+    return segments;
   }
 
   generateTrees(): Tree[] {
@@ -181,12 +205,16 @@ export class World {
       envelopes.draw(context, { fill: "#BBB", stroke: "#BBB", lineWidth: 15 });
     }
 
+    for (const marking of this.markings) {
+      marking.draw(context);
+    }
+
     for (const seg of this.graph.segments) {
       seg.draw(context, { color: "white", width: 4, dash: [10, 10] });
     }
 
     for (const seg of this.roadBorders) {
-      seg.draw(context, { color: "white", width: 4 });
+      seg.draw(context, { color: "white", width: 3 });
     }
 
     const items = [...this.buildings, ...this.trees];
