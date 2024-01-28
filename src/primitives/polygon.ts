@@ -53,7 +53,9 @@ export class Polygon {
     return this.containsPoint(midPoint);
   }
 
-  containsPoint(point: Point): boolean {
+  containsPoint(point: Point | null): boolean {
+    if (!point) return false;
+
     const outerPoint = new Point(-1000, -1000);
     let intersectionCount = 0;
 
