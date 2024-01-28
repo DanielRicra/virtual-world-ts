@@ -1,23 +1,17 @@
-import { Utils } from "../math";
-import { Envelope, Point, Polygon, Segment } from "../primitives";
+import type { Utils } from "../math";
+import { Point, Segment } from "../primitives";
+import { Marking } from "./marking";
 
-export class Stop {
-  support: Segment;
-  polygon: Polygon;
+export class Stop extends Marking {
   border: Segment;
   constructor(
-    public center: Point,
-    public directionVector: Point,
-    public width: number,
-    public height: number,
-    private readonly utils: Utils
+    center: Point,
+    directionVector: Point,
+    width: number,
+    height: number,
+    utils: Utils
   ) {
-    this.support = new Segment(
-      utils.translate(center, utils.angle(directionVector), height / 2),
-      utils.translate(center, utils.angle(directionVector), -height / 2),
-      utils
-    );
-    this.polygon = new Envelope(this.support, width, 0, this.utils).polygon;
+    super(center, directionVector, width, height, utils);
 
     this.border = this.polygon.segments[2];
   }
@@ -33,7 +27,7 @@ export class Stop {
     context.textBaseline = "middle";
     context.textAlign = "center";
     context.fillStyle = "white";
-    context.font = "bold" + this.height * 0.3 + "px Arial";
+    context.font = "bold" + this.height * 0.5 + "px Arial";
     context.fillText("STOP", 0, 1);
 
     context.restore();
