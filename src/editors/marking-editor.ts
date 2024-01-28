@@ -1,5 +1,6 @@
 import { Stop } from "../markings";
 import { Crossing } from "../markings/crossing";
+import { Marking } from "../markings/marking";
 import { Utils } from "../math";
 import { Point, Segment } from "../primitives";
 import { Viewport } from "../viewport";
@@ -37,10 +38,7 @@ export class MarkingEditor {
     this.markings = world.markings;
   }
 
-  createMarking(
-    center: Point,
-    _directionVector: Point
-  ): Point | Stop | Crossing {
+  createMarking(center: Point, _directionVector: Point): Marking | Point {
     return center;
   }
 
