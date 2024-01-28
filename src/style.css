@@ -55,10 +55,13 @@ button {
 }
 .toggleButtons {
   display: flex;
+  button {
+    border-radius: 0;
+  }
   & .setMode {
     border-radius: .6rem 0 0 .6rem;
   }
-  & .stop {
+  & .target {
     border-radius: 0 .6rem .6rem 0;
   }
 }
