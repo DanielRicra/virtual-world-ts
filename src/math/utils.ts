@@ -115,4 +115,11 @@ export class Utils {
   lerp2D(A: Point, B: Point, t: number): Point {
     return new Point(this.lerp(A.x, B.x, t), this.lerp(A.y, B.y, t));
   }
+
+  getFake3dPoint(point: Point, viewPoint: Point, height: number): any {
+    const dir = this.normalize(this.subtract(point, viewPoint));
+    const dist = this.distance(point, viewPoint);
+    const scaler = Math.atan(dist / 300) / (Math.PI / 2);
+    return this.add(point, this.scale(dir, height * scaler));
+  }
 }

@@ -197,7 +197,7 @@ export class World {
       }
     }
 
-    return bases.map((b) => new Building(b, this.utils));
+    return bases.map((b) => new Building(b, 200, this.utils));
   }
 
   draw(context: CanvasRenderingContext2D, viewPoint: Point) {
