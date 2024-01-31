@@ -1,9 +1,19 @@
-import type { Utils } from "../math";
+import { Utils } from "../math";
 import { Envelope, Point, Polygon, Segment } from "../primitives";
 
 export class Marking {
   support: Segment;
   polygon: Polygon;
+  type:
+    | "marking"
+    | "crossing"
+    | "light"
+    | "parking"
+    | "start"
+    | "stop"
+    | "target"
+    | "yield" = "marking";
+
   constructor(
     public center: Point,
     public directionVector: Point,
@@ -16,7 +26,7 @@ export class Marking {
       utils.translate(center, utils.angle(directionVector), -height / 2),
       utils
     );
-    this.polygon = new Envelope(this.support, width, 0, this.utils).polygon;
+    this.polygon = new Envelope(this.support, width, 0, this.utils).polygon!;
   }
 
   draw(context: CanvasRenderingContext2D) {

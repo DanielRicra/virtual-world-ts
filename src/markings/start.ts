@@ -15,6 +15,7 @@ export class Start extends Marking {
 
     this.image = new Image();
     this.image.src = "./src/assets/car.png";
+    this.type = "start";
   }
 
   draw(context: CanvasRenderingContext2D) {

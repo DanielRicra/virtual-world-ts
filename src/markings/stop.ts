@@ -14,6 +14,7 @@ export class Stop extends Marking {
     super(center, directionVector, width, height, utils);
 
     this.border = this.polygon.segments[2];
+    this.type = "stop";
   }
 
   draw(context: CanvasRenderingContext2D) {

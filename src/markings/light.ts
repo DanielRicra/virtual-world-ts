@@ -16,6 +16,7 @@ export class Light extends Marking {
 
     this.state = "off";
     this.border = this.polygon.segments[0];
+    this.type = "light";
   }
 
   draw(context: CanvasRenderingContext2D) {

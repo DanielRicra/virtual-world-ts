@@ -11,6 +11,7 @@ export class Target extends Marking {
     utils: Utils
   ) {
     super(center, directionVector, width, height, utils);
+    this.type = "target";
   }
 
   draw(context: CanvasRenderingContext2D) {

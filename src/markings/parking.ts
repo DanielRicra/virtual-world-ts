@@ -14,6 +14,7 @@ export class Parking extends Marking {
     super(center, directionVector, width, height, utils);
 
     this.borders = [this.polygon.segments[0], this.polygon.segments[2]];
+    this.type = "parking";
   }
 
   draw(context: CanvasRenderingContext2D) {
