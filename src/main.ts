@@ -28,6 +28,7 @@ const yieldBtn = document.querySelector("#yieldBtn") as HTMLButtonElement;
 const parkingBtn = document.querySelector("#parkingBtn") as HTMLButtonElement;
 const lightBtn = document.querySelector("#lightBtn") as HTMLButtonElement;
 const targetBtn = document.querySelector("#targetBtn") as HTMLButtonElement;
+const inputFile = document.querySelector("#fileInput") as HTMLInputElement;
 
 deleteBtn.addEventListener("click", dispose);
 saveBtn.addEventListener("click", save);
@@ -39,6 +40,7 @@ yieldBtn.addEventListener("click", () => setMode("yield"));
 parkingBtn.addEventListener("click", () => setMode("parking"));
 lightBtn.addEventListener("click", () => setMode("light"));
 targetBtn.addEventListener("click", () => setMode("target"));
+inputFile.addEventListener("change", load);
 
 canvas.width = config.WIDTH;
 canvas.height = config.HEIGHT;
@@ -49,12 +51,13 @@ if (context === null) {
   throw new Error("Oops! The context is null.");
 }
 
-const graphString = localStorage.getItem("graph");
-const graphInfo = graphString ? JSON.parse(graphString) : null;
-
 const utils = new Utils();
-const graph = graphInfo ? Graph.load(graphInfo, utils) : new Graph();
-const world = new World(graph, utils, 76, 10);
+const worldString = localStorage.getItem("world");
+const worldInfo = worldString ? JSON.parse(worldString) : null;
+let world = worldInfo
+  ? World.load(worldInfo, utils)
+  : new World(new Graph(), utils);
+const graph = world.graph;
 
 const viewport = new Viewport(canvas, utils);
 
@@ -116,8 +119,45 @@ function dispose() {
   world.markings.length = 0;
 }
 
+function load(event: Event) {
+  const target = event.target as HTMLInputElement;
+  let file = (target.files as FileList)[0];
+
+  if (!file) {
+    alert("No file selected");
+    return;
+  }
+
+  const reader = new FileReader();
+  reader.readAsText(file);
+
+  reader.onload = (event) => {
+    const fileContent = event.target?.result;
+    if (typeof fileContent !== "string") {
+      alert("Fail to load file");
+      return;
+    }
+    const jsonData = JSON.parse(fileContent);
+    world = World.load(jsonData, utils);
+    localStorage.setItem("world", JSON.stringify(world));
+    location.reload();
+  };
+}
+
 function save() {
-  localStorage.setItem("graph", JSON.stringify(graph));
+  const element = document.createElement("a");
+  element.setAttribute(
+    "href",
+    "data:application/json;charset=utf-8," +
+      encodeURIComponent(JSON.stringify(world))
+  );
+
+  const filename = "name.world";
+  element.setAttribute("download", filename);
+
+  element.click();
+
+  localStorage.setItem("world", JSON.stringify(world));
 }
 
 function setMode(mode: SetModeKinds) {
