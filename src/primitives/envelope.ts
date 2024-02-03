@@ -4,10 +4,21 @@ import { Utils } from "../math/utils";
 export class Envelope {
   polygon: Polygon;
 
+  static load(info: Envelope, utils: Utils) {
+    const env = new Envelope(
+      new Segment(info.skeleton.p1, info.skeleton.p2, utils),
+      info.width,
+      info.roundness,
+      utils
+    );
+    env.polygon = Polygon.load(info.polygon!, utils);
+    return env;
+  }
+
   constructor(
-    private skeleton: Segment,
-    width: number,
-    roundness: number = 1,
+    public skeleton: Segment,
+    public width: number,
+    public roundness: number = 1,
     private readonly utils: Utils
   ) {
     this.polygon = this.generatePolygon(width, roundness);
@@ -39,6 +50,8 @@ export class Envelope {
     context: CanvasRenderingContext2D,
     options: { stroke?: string; lineWidth?: number; fill?: string } = {}
   ) {
-    this.polygon.draw(context, options);
+    if (this.polygon) {
+      this.polygon.draw(context, options);
+    }
   }
 }

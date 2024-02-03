@@ -4,6 +4,13 @@ import type { Utils } from "../math/utils";
 export class Polygon {
   segments: Segment[];
 
+  static load(info: Polygon, utils: Utils): Polygon {
+    return new Polygon(
+      info.points.map((p) => new Point(p.x, p.y)),
+      utils
+    );
+  }
+
   static union(polygons: Polygon[], utils: Utils): Segment[] {
     Polygon.multiBreak(polygons, utils);
     const keptSegments = [];

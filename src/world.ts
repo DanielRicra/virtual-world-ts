@@ -1,6 +1,6 @@
 import { Building, Tree } from "./items";
-import { Stop } from "./markings";
-import { Crossing } from "./markings/crossing";
+import { Marking } from "./markings/marking";
+import { MarkingLoader } from "./markings/marking-loader";
 import { Graph, Utils } from "./math";
 import { Envelope, Point, Polygon, Segment } from "./primitives";
 
@@ -10,7 +10,31 @@ export class World {
   buildings: Building[];
   trees: Tree[];
   laneGuides: Segment[];
-  markings: (Stop | Crossing)[];
+  markings: Marking[];
+
+  static load(info: World, utils: Utils): World {
+    const world = new World(new Graph(), utils);
+    world.graph = Graph.load(info.graph, utils);
+    world.roadWidth = info.roadWidth;
+    world.roadRoundness = info.roadRoundness;
+    world.buildingWidth = info.buildingWidth;
+    world.buildingMinLength = world.buildingMinLength;
+    world.spacing = info.spacing;
+    world.treeSize = info.treeSize;
+    world.envelopes = info.envelopes.map((e) => Envelope.load(e, utils));
+    world.roadBorders = info.roadBorders.map(
+      (b) => new Segment(b.p1, b.p2, utils)
+    );
+    world.buildings = info.buildings.map((b) => Building.load(b, utils));
+    world.trees = info.trees.map(
+      (t) => new Tree(t.center, info.treeSize, t.height, utils)
+    );
+    world.laneGuides = info.laneGuides.map(
+      (lG) => new Segment(lG.p1, lG.p2, utils)
+    );
+    world.markings = info.markings.map((m) => MarkingLoader.load(m, utils));
+    return world;
+  }
 
   constructor(
     public graph: Graph,

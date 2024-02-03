@@ -2,6 +2,14 @@ import { Utils } from "../math";
 import { Point, Polygon } from "../primitives";
 
 export class Building {
+  static load(buildingInfo: Building, utils: Utils): Building {
+    return new Building(
+      Polygon.load(buildingInfo.base, utils),
+      buildingInfo.height,
+      utils
+    );
+  }
+
   constructor(
     public base: Polygon,
     public height: number = 200,
