@@ -4,9 +4,9 @@ import { Point, Polygon } from "../primitives";
 export class Tree {
   base: Polygon;
   constructor(
-    private center: Point,
-    private size: number,
-    private heightCoefficient: number,
+    public center: Point,
+    public size: number,
+    public height: number = 200,
     private readonly utils: Utils
   ) {
     this.base = this.generateLevel(center, size);
@@ -24,11 +24,7 @@ export class Tree {
   }
 
   draw(context: CanvasRenderingContext2D, viewPoint: Point) {
-    const diff = this.utils.subtract(this.center, viewPoint);
-    const top = this.utils.add(
-      this.center,
-      this.utils.scale(diff, this.heightCoefficient)
-    );
+    const top = this.utils.getFake3dPoint(this.center, viewPoint, this.height);
 
     const levelCount = 7;
     for (let level = 0; level < levelCount; level++) {
